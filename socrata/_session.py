@@ -7,12 +7,12 @@ import time
 import json
 
 def _parse_app_token(text):
-    possibilities =  re.findall(r'blist\.configuration\.appToken=\\"([^\\"]+)\\"', text)
+    possibilities =  re.findall(r'blist\.configuration\.appToken="([^"]+)"', text)
     if len(possibilities) == 1:
         return possibilities[0]
     else:
         fp = open('/tmp/base.js', 'w')
-        json.dump(text, fp)
+        fp.write(text)
         fp.close()
         print possibilities
         raise ValueError("I couldn't find an app token. I'm writing the JavaScript file to \"/tmp/base.js\".")
