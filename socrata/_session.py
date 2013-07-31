@@ -24,11 +24,13 @@ def _check_input(email, password):
             email = os.environ[u'SOCRATA_EMAIL']
         else:
             raise ValueError(u'You must specify an email address.')
-    elif password == None:
+
+    if password == None:
         if u'SOCRATA_PASSWORD' in os.environ:
             password = os.environ[u'SOCRATA_PASSWORD']
         else:
             raise ValueError(u'You must specify a password.')
+
     return email, password
 
 def _clean_portal_name(portal):
