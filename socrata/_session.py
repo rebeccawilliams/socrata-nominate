@@ -4,6 +4,20 @@ import os
 from requests import session
 import lxml.html
 
+
+def _parse_app_token(text):
+    m = re.match(r'^.*blist\.configuration\.appToken="([^"]+)".*$', text)
+    return m.group(1)
+
+def _parse_csrf_pair(text):
+    html = lxml.html.fromstring(text)
+    # Get the CSRF token
+    # <meta content="authenticity_token" name="csrf-param" />
+    # <meta content="CR0tPy8mxG/qancEuJlguBlUVwZWEAKw7RWLWcCPWTM=" name="csrf-token" />
+    csrf_param = unicode(html.xpath(u'//meta[@name="csrf-param"]/@content')[0])
+    csrf_token = unicode(html.xpath(u'//meta[@name="csrf-token"]/@content')[0])
+    return csrf_param, csrf_token
+
 class Session:
     def __init__(self, portal, email = None, password = None):
         u'Log in to the portal'
@@ -34,12 +48,7 @@ class Session:
 
         # Log in
         response = self.session.get(self.portal + u'/login')
-        html = lxml.html.fromstring(response.text)
-        # Get the CSRF token
-        # <meta content="authenticity_token" name="csrf-param" />
-        # <meta content="CR0tPy8mxG/qancEuJlguBlUVwZWEAKw7RWLWcCPWTM=" name="csrf-token" />
-        csrf_param = unicode(html.xpath(u'//meta[@name="csrf-param"]/@content')[0])
-        csrf_token = unicode(html.xpath(u'//meta[@name="csrf-token"]/@content')[0])
+        csrf_param, csrf_token = _parse_csrf_pair(response.text)
         self.session.post(self.portal + u'/user_sessions', data = {
             u'utf8': u'✓',
             csrf_param: csrf_token,
@@ -49,20 +58,9 @@ class Session:
         })
         self.set_app_token()
 
-    @staticmethod
-    def get_csrf_pair(response):
-        html = lxml.html.fromstring(response.text)
-        # Get the CSRF token
-        # <meta content="authenticity_token" name="csrf-param" />
-        # <meta content="CR0tPy8mxG/qancEuJlguBlUVwZWEAKw7RWLWcCPWTM=" name="csrf-token" />
-        csrf_param = unicode(html.xpath(u'//meta[@name="csrf-param"]/@content')[0])
-        csrf_token = unicode(html.xpath(u'//meta[@name="csrf-token"]/@content')[0])
-        return csrf_param, csrf_token
-
     def set_app_token(self):
         response = self.session.get(self.portal + u'/packages/base.js')
-        m = re.match(r'^.*blist\.configuration\.appToken="([^"]+)".*$', response.text)
-        self.app_token = m.group(1)
+        self.app_token = _parse_app_token(response.text)
 
     def nominate(self, title, description):
         u'Nominate a dataset.'
