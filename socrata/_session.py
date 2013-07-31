@@ -18,30 +18,35 @@ def _parse_csrf_pair(text):
     csrf_token = unicode(html.xpath(u'//meta[@name="csrf-token"]/@content')[0])
     return csrf_param, csrf_token
 
+def _check_input(email, password):
+    if email == None:
+        if u'SOCRATA_EMAIL' in os.environ:
+            email = os.environ[u'SOCRATA_EMAIL']
+        else:
+            raise ValueError(u'You must specify an email address.')
+    elif password == None:
+        if u'SOCRATA_PASSWORD' in os.environ:
+            password = os.environ[u'SOCRATA_PASSWORD']
+        else:
+            raise ValueError(u'You must specify a password.')
+    return email, password
+
+def _clean_portal_name(portal):
+    u'Clean up the portal name'
+    if not (portal.startswith(u'http://') or portal.startswith(u'https://')):
+        # Add the protocal
+        portal = u'https://' + portal
+    if portal[-1] == u'/':
+        # Remove trailing slash.
+        portal = portal[:-1]
+    return portal
+
 class Session:
     def __init__(self, portal, email = None, password = None):
         u'Log in to the portal'
-
         # Check input
-        if email == None:
-            if u'SOCRATA_EMAIL' in os.environ:
-                email = os.environ[u'SOCRATA_EMAIL']
-            else:
-                raise ValueError(u'You must specify an email address.')
-        elif password == None:
-            if u'SOCRATA_PASSWORD' in os.environ:
-                password = os.environ[u'SOCRATA_PASSWORD']
-            else:
-                raise ValueError(u'You must specify a password.')
-
-        # Clean up the portal name
-        if not (portal.startswith(u'http://') or portal.startswith(u'https://')):
-            # Add the protocal
-            portal = u'https://' + portal
-        if portal[-1] == u'/':
-            # Remove trailing slash.
-            portal = portal[:-1]
-        self.portal = portal
+        email, password = _check_input(email, password)
+        self.portal = _clean_portal_name(portal)
 
         # Start the web session
         self.session = session()
@@ -56,9 +61,8 @@ class Session:
             u'user_session[password]': password,
             u'commit': u'Sign In',
         })
-        self.set_app_token()
 
-    def set_app_token(self):
+        # Set the app token.
         response = self.session.get(self.portal + u'/packages/base.js')
         self.app_token = _parse_app_token(response.text)
 
