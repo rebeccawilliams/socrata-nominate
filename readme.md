@@ -2,7 +2,7 @@ Suggest that datasets be opened on Socrata portals.
 
 ## Install
 This library might expand to other Socrata methods,
-so I just named it `socrata`.
+so I just named it "socrata".
 
 ```sh
 pip install socrata
