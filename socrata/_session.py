@@ -3,11 +3,16 @@ import re
 import os
 from requests import session
 import lxml.html
-
+import time
+import json
 
 def _parse_app_token(text):
     m = re.match(r'^.*blist\.configuration\.appToken="([^"]+)".*$', text)
-    return m.group(1)
+    if m:
+        return m.group(1)
+    else:
+        raise ValueError("I couldn't find an app token. I'm writing the JavaScript file to \"/tmp/base.js\".")
+        json.dump(open('/tmp/base.js', 'w'), text)
 
 def _parse_csrf_pair(text):
     html = lxml.html.fromstring(text)
@@ -65,7 +70,8 @@ class Session:
         })
 
         # Set the app token.
-        response = self.session.get(self.portal + u'/packages/base.js')
+        cachebuster = int(time.time())
+        response = self.session.get(self.portal + u'/packages/base.js?%d' % cachebuster)
         self.app_token = _parse_app_token(response.text)
 
     def nominate(self, title, description):
