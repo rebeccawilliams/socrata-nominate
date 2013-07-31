@@ -58,10 +58,11 @@ class Session:
 
         # Start the web session
         self.session = session()
+        self.responses = dict()
 
         # Log in
-        response = self.session.get(self.portal + u'/login')
-        csrf_param, csrf_token = _parse_csrf_pair(response.text)
+        self.responses[u'/login'] = self.session.get(self.portal + u'/login')
+        csrf_param, csrf_token = _parse_csrf_pair(self.responses[u'/login'].text)
         self.session.post(self.portal + u'/user_sessions', data = {
             u'utf8': u'✓',
             csrf_param: csrf_token,
@@ -72,16 +73,16 @@ class Session:
 
         # Set the app token.
         cachebuster = int(time.time())
-        response = self.session.get(self.portal + u'/packages/base.js?%d' % cachebuster)
-        self.app_token = _parse_app_token(response.text)
+        self.responses[u'/packages/base.js'] = self.session.get(self.portal + u'/packages/base.js?%d' % cachebuster)
+        self.app_token = _parse_app_token(self.responses[u'/packages/base.js'].text)
 
     def nominate(self, title, description):
         u'Nominate a dataset.'
 
         # Get CSRF pair
         url = self.portal + u'/nominate'
-        response = self.session.get(url)
-        _, csrf_token = _parse_csrf_pair(response.text)
+        self.responses[u'/nominate'] = self.session.get(url)
+        _, csrf_token = _parse_csrf_pair(self.responses[u'/nominate'].text)
 
         # Submit the dataset
         url = self.portal + u'/api/nominations?accessType=WEBSITE'
@@ -96,4 +97,4 @@ class Session:
             u'X-Requested-With': u'XMLHttpRequest',
             u'X-Socrata-Federation': u'Honey Badger',
         }
-        self.response = self.session.post(url, data = data, headers = headers)
+        self.responses[u'/api/nominations'] = self.session.post(url, data = data, headers = headers)
