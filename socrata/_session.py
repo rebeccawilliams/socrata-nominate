@@ -11,11 +11,10 @@ def _parse_app_token(text):
     if m:
         return m.group(1)
     else:
-        raise ValueError("I couldn't find an app token. I'm writing the JavaScript file to \"/tmp/base.js\".")
         fp = open('/tmp/base.js', 'w')
         json.dump(text, fp)
         fp.close()
-        print text
+        raise ValueError("I couldn't find an app token. I'm writing the JavaScript file to \"/tmp/base.js\".")
 
 
 def _parse_csrf_pair(text):
