@@ -18,10 +18,8 @@ def _parse_app_token(text):
         raise ValueError("I couldn't find an app token. I'm writing the JavaScript file to \"/tmp/base.js\".")
 
 def _parse_csrf_pair(text):
+    'Get the CSRF token.'
     html = lxml.html.fromstring(text)
-    # Get the CSRF token
-    # <meta content="authenticity_token" name="csrf-param" />
-    # <meta content="CR0tPy8mxG/qancEuJlguBlUVwZWEAKw7RWLWcCPWTM=" name="csrf-token" />
     csrf_param = unicode(html.xpath(u'//meta[@name="csrf-param"]/@content')[0])
     csrf_token = unicode(html.xpath(u'//meta[@name="csrf-token"]/@content')[0])
     return csrf_param, csrf_token
