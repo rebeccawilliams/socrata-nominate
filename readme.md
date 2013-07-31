@@ -1,5 +1,7 @@
 Suggest that datasets be opened on Socrata portals.
 
+This isn't quite working. Bleh. Maybe I should rewrite it in phantomjs.
+
 ## Install
 This library might expand to other Socrata methods,
 so I just named it "socrata".
