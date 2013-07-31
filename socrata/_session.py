@@ -79,12 +79,12 @@ class Session:
         u'Nominate a dataset.'
 
         # Get CSRF pair
-        url = portal + u'/nominate'
+        url = self.portal + u'/nominate'
         response = self.session.get(url)
-        _, csrf_token = self.get_csrf_pair(response)
+        _, csrf_token = _parse_csrf_pair(response.text)
 
         # Submit the dataset
-        url = portal + u'/api/nominations?accessType=WEBSITE'
+        url = self.portal + u'/api/nominations?accessType=WEBSITE'
         data = json.dumps({
             u'description': description,
             u'title': title,
@@ -96,4 +96,4 @@ class Session:
             u'X-Requested-With': u'XMLHttpRequest',
             u'X-Socrata-Federation': u'Honey Badger',
         }
-        response = self.session.post(url, data = data, headers = headers)
+        self.response = self.session.post(url, data = data, headers = headers)
