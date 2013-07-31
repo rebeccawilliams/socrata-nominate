@@ -18,7 +18,7 @@ setup(
     keywords='opendata',
 
     url='http://thomaslevine.com',
-    download_url='https://github.com/tlevine/socrata-nominate',
+    download_url='https://github.com/tlevine/socrata',
 
     classifiers=[
         'Development Status :: 3 - Alpha',
