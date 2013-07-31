@@ -16,7 +16,6 @@ def _parse_app_token(text):
         fp.close()
         raise ValueError("I couldn't find an app token. I'm writing the JavaScript file to \"/tmp/base.js\".")
 
-
 def _parse_csrf_pair(text):
     html = lxml.html.fromstring(text)
     # Get the CSRF token
