@@ -7,7 +7,7 @@ import time
 import json
 
 def _parse_app_token(text):
-    m = re.match(r'^.*blist\.configuration\.appToken="([^"]+)".*$', text)
+    m = re.match(r'^.*blist\.configuration\.appToken=\\"([^\\"]+)\\".*$', text)
     if m:
         return m.group(1)
     else:
