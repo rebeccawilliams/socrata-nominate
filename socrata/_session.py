@@ -7,13 +7,14 @@ import time
 import json
 
 def _parse_app_token(text):
-    m = re.match(r'^.*blist\.configuration\.appToken=\\"([^\\"]+)\\".*$', text)
-    if m:
-        return m.group(1)
+    possibilities =  re.findall(r'blist\.configuration\.appToken=\\"([^\\"]+)\\"', text)
+    if len(possibilities) == 1:
+        return possibilities[0]
     else:
         fp = open('/tmp/base.js', 'w')
         json.dump(text, fp)
         fp.close()
+        print possibilities
         raise ValueError("I couldn't find an app token. I'm writing the JavaScript file to \"/tmp/base.js\".")
 
 def _parse_csrf_pair(text):
