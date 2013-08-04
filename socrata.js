@@ -115,7 +115,7 @@ socrata.sites(function(sites){
       so_far++
       var site = sites.pop()
 
-      console.log(site + ' (' + so_far + ' of ' + total + ')')
+      console.log('\n' + site + ' (' + so_far + ' of ' + total + ')')
       socrata.login(site, function(page){
         socrata.nominate(page, system.args[1], system.args[2], system.args[3])
       })
