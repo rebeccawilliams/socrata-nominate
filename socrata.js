@@ -23,9 +23,19 @@ var socrata = (function(){
     })
   }
 
+  socrata.login = function(site) {
+    var page = webpage.create()
+    page.open(url + '/login', function (status) {
+      document.getElementById('user_session_login').value = 'abc'
+      document.getElementById('user_session_password').value = 'abc'
+      $('input[value="Sign In"]').click()
+      console.log(window.location)
+    })
+  }
+
   socrata.nominate = function(site, title, description) {
-    webpage.create()
-    page.open(url, function (status) {
+    page.open(url + '/nominate', function (status) {
+      $('a[href="#Submit dataset"]').click()
       phantom.exit()
     })
   }
@@ -33,8 +43,12 @@ var socrata = (function(){
   return socrata
 })()
 
+socrata.login('https://data.nola.gov')
+
+/*
 socrata.sites(function(sites){
   sites.map(function(site){
     console.log(site)
   })
 })
+*/
