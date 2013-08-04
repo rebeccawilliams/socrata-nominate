@@ -6,6 +6,8 @@ var socrata = (function(){
   var email = system.env.SOCRATA_EMAIL
   var password = system.env.SOCRATA_PASSWORD
 
+  socrata.wait = function(sec, func) { setTimeout(func, sec * 1000) }
+
   socrata.is_domain = function(potential_url){
     return (null !== potential_url.match(/\./)) && (null == potential_url.match(/ /))
   }
@@ -35,7 +37,7 @@ var socrata = (function(){
         document.querySelector('#user_session_password').value = password
         document.querySelector('input[value="Sign In"]').click()
       }, email, password)
-      setTimeout(function(){
+      socrata.wait(3, function(){
         page.render('login.png')
         var user_name = page.evaluate(function(){
           return document.querySelector('.currentUser').innerText
@@ -48,7 +50,7 @@ var socrata = (function(){
         } else {
           phantom.exit()
         }
-      }, 3000)
+      })
     })
   }
 
@@ -56,30 +58,36 @@ var socrata = (function(){
     page.evaluate(function () {
       window.location.href = '/nominate'
     })
-    setTimeout(function(){
+    socrata.wait(3, function(){
       page.render('nominate.png')
 
       page.evaluate(function(title, description){
+        // jQuery works but querySelector doesn't?
+        jQuery('a[href="#Submit dataset"]').click()
+
         document.querySelector('#nominateTitle').value = title
         document.querySelector('#nominateDescription').value = description
         setTimeout(function(){
-        //$('a[href="#Submit"]').click()
+        // document.querySelector('a[href="#Submit"]').click()
         }, 1000)
       }, title, description)
 
-      setTimeout(function(){
+      socrata.wait(2, function(){
         page.render('submit.png')
         phantom.exit()
-      }, 2000)
+      })
 
-    }, 3000)
+    })
   }
 
   return socrata
 })()
 
 socrata.login('data.nola.gov', function(page){
-  socrata.nominate(page, 'a', 'b')
+  socrata.nominate(page,
+    'Top Ten Elevator Offenders',
+    'I would like dataset with the addresses of the ten buildings with the most offensive elevators.'
+  )
 })
 
 /*
