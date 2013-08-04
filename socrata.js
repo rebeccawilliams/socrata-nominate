@@ -1,6 +1,10 @@
 var socrata = (function(){
   var webpage = require('webpage')
+  var system = require('system')
   var socrata = {}
+
+  var email = system.env.SOCRATA_EMAIL
+  var password = system.env.SOCRATA_PASSWORD
 
   socrata.is_domain = function(potential_url){
     return (null !== potential_url.match(/\./)) && (null == potential_url.match(/ /))
@@ -26,16 +30,25 @@ var socrata = (function(){
   socrata.login = function(domain, callback) {
     var page = webpage.create()
     page.open('https://' + domain + '/login', function (status) {
-      var x = page.evaluate(function(){
-        document.querySelector('#user_session_login').value = 'abc'
-        document.querySelector('#user_session_password').value = 'abc'
+      var x = page.evaluate(function(email, password){
+        document.querySelector('#user_session_login').value = email
+        document.querySelector('#user_session_password').value = password
         document.querySelector('input[value="Sign In"]').click()
-        return document.querySelector('.currentUser').innerText
-      })
-      console.log(x)
-      if (callback) {
-        callback(page)
-      }
+      }, email, password)
+      setTimeout(function(){
+        page.render('login.png')
+        var user_name = page.evaluate(function(){
+          return document.querySelector('.currentUser').innerText
+        })
+        if (user_name === 'Unknown User') {
+          console.log('Logging in failed.')
+          phantom.exit()
+        } else if (callback) {
+          callback(page)
+        } else {
+          phantom.exit()
+        }
+      }, 3000)
     })
   }
 
