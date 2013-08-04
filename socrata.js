@@ -17,7 +17,7 @@ var socrata = (function(){
         } else {
           var domain = ''
         }
-        return domain.replace('https://', '').replace('http://', '')
+        return domain.replace('https://', '').replace('http://', '').replace(/\/$/, '')
       }).filter(function(domain) { return domain !== '' })
       callback(portals)
     })
@@ -33,6 +33,8 @@ var socrata = (function(){
   return socrata
 })()
 
-socrata.sites(function(site){
-  console.log(site)
+socrata.sites(function(sites){
+  sites.map(function(site){
+    console.log(site)
+  })
 })
