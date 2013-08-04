@@ -59,13 +59,13 @@ var socrata = (function(){
     setTimeout(function(){
       page.render('nominate.png')
 
-      page.evaluate(function(){
-        $('#nominateTitle').val(title)
-        $('#nominateDescription').val(description)
+      page.evaluate(function(title, description){
+        document.querySelector('#nominateTitle').value = title
+        document.querySelector('#nominateDescription').value = description
         setTimeout(function(){
         //$('a[href="#Submit"]').click()
         }, 1000)
-      })
+      }, title, description)
 
       setTimeout(function(){
         page.render('submit.png')
