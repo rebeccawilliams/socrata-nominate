@@ -1,13 +1,11 @@
 Suggest that datasets be opened on Socrata portals.
 
-This isn't quite working. Bleh. Maybe I should rewrite it in phantomjs.
-
 ## Install
 This library might expand to other Socrata methods,
 so I just named it "socrata".
 
 ```sh
-pip install socrata
+npm install socrata
 ```
 
 ## Settings
@@ -21,25 +19,26 @@ export SOCRATA_PASSWORD=hmkmovq223h89u,hr9on
 ## Nominating a dataset
 Request a dataset for one portal like so.
 
-```python
-import socrata
+```javascript
+var socrata = require('socrata')
 socrata.nominate(
-    'nmfs.socrata.com',
-    'Top Ten Elevator Offenders',
-    'I would like dataset with the addresses of the ten buildings with the most offensive elevators.'
+  'nmfs.socrata.com',
+  'Top Ten Elevator Offenders',
+  'I would like dataset with the addresses of the ten buildings with the most offensive elevators.'
 )
 ```
 
 If you would like to run this on all of the portals,
 get the list of sites.
 
-```python
-for site in socrata.sites():
-    socrata.nominate(
-        site, 
-        'Top Ten Elevator Offenders',
-        'I would like dataset with the addresses of the ten buildings with the most offensive elevators.'
-    )
+```javascript
+socrata.sites().map(function(site){
+  socrata.nominate(
+    site, 
+    'Top Ten Elevator Offenders',
+    'I would like dataset with the addresses of the ten buildings with the most offensive elevators.'
+  )
+})
 ```
 
 ## Limitations
