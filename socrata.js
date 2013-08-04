@@ -105,13 +105,14 @@ var socrata = (function(){
 })()
 
 var system = require('system')
+var INTERVAL = 15
 
 socrata.sites(function(sites){
   var total = sites.length
       so_far = 0
 
   for (i in sites) {
-    socrata.wait(i * 10, function(){
+    socrata.wait(i * INTERVAL, function(){
       so_far++
       var site = sites.pop()
 
@@ -120,6 +121,6 @@ socrata.sites(function(sites){
         socrata.nominate(page, system.args[1], system.args[2], system.args[3])
       })
     })
-    socrata.wait(total * 10, phantom.exit)
+    socrata.wait(total * INTERVAL, phantom.exit)
   }
 })
