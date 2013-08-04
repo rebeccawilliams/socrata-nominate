@@ -72,21 +72,32 @@ var socrata = (function(){
       }
       */
 
-      page.evaluate(function(title, description){
-        // jQuery works but querySelector doesn't?
-        jQuery('a[href="#Submit dataset"]').click()
+      var can_nominate = page.evaluate(function(title, description){
+        if (document.querySelector('#nominateTitle')) {
+          // jQuery works but querySelector doesn't?
+          jQuery('a[href="#Submit dataset"]').click()
 
-        document.querySelector('#nominateTitle').value = title
-        document.querySelector('#nominateDescription').value = description
-        setTimeout(function(){
-        // Do the submission.
-        // document.querySelector('a[href="#Submit"]').click()
-        }, 1000)
+          document.querySelector('#nominateTitle').value = title
+          document.querySelector('#nominateDescription').value = description
+
+          setTimeout(function(){
+          // Do the submission.
+          // document.querySelector('a[href="#Submit"]').click()
+          }, 1000)
+          return true
+        } else {
+          return false
+        }
       }, title, description)
 
-      socrata.wait(2, function(){
-        page.render(domain + '-submit.png')
-      })
+      if (can_nominate) {
+        socrata.wait(2, function(){
+          page.render(domain + '-submit.png')
+          console.log('Nominated the dataset on ' + domain)
+        })
+      } else {
+        console.log('You cannot nominate datasets on ' + domain)
+      }
     })
   }
 
@@ -104,7 +115,7 @@ socrata.sites(function(sites){
       so_far++
       var site = sites.pop()
 
-      console.log(site, '(', so_far, 'of', total, ')')
+      console.log(site + ' (' + so_far + ' of ' + total + ')')
       socrata.login(site, function(page){
         socrata.nominate(page, system.args[1], system.args[2], system.args[3])
       })
