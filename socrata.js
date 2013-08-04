@@ -59,8 +59,17 @@ var socrata = (function(){
     setTimeout(function(){
       page.render('nominate.png')
 
-      // $('a[href="#Submit dataset"]').click()
-      phantom.exit()
+      page.evaluate(function(){
+        $('a[href="#Submit dataset"]').click()
+        setTimeout(function(){
+          $('a[href="#Submit"]').click()
+        }, 1000)
+      })
+
+      setTimeout(function(){
+        page.render('submit.png')
+        phantom.exit()
+      }, 2000)
 
     }, 3000)
   }
