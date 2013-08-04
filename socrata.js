@@ -99,16 +99,16 @@ var nominate = function(domain) {
   return {
     then:function(callback){
       socrata.login(domain, function(page){
-        socrata.nominate(page, system.args[1], system.args[2], system.args[3])
+        socrata.nominate(page, system.args[1], system.args[2], system.args[3], callback)
       })
     }
   }
 }
 
-nominate('data.nola.gov')
-phantom.exit()
 
 socrata.sites(function(sites){
-  var promises = sites.map(nominate)
-
+  var promises = [null].concat(sites.map(nominate)).concat({then:phantom.exit})
+  promises.reduce(function(_,promise){
+    console.log(promise.then)
+  })
 })
