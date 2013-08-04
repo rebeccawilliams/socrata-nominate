@@ -58,7 +58,7 @@ var socrata = (function(){
     })
   }
 
-  socrata.nominate = function(page, title, description, attachment) {
+  socrata.nominate = function(page, title, description, attachment, callback) {
     page.evaluate(function () {
       window.location.href = '/nominate'
     })
@@ -85,9 +85,8 @@ var socrata = (function(){
 
       socrata.wait(2, function(){
         page.render('submit.png')
-        phantom.exit()
+        callback()
       })
-
     })
   }
 
@@ -95,14 +94,21 @@ var socrata = (function(){
 })()
 
 var system = require('system')
-socrata.login('data.nola.gov', function(page){
-  socrata.nominate(page, system.args[1], system.args[2], system.args[3])
-})
 
-/*
+var nominate = function(domain) {
+  return {
+    then:function(callback){
+      socrata.login(domain, function(page){
+        socrata.nominate(page, system.args[1], system.args[2], system.args[3])
+      })
+    }
+  }
+}
+
+nominate('data.nola.gov')
+phantom.exit()
+
 socrata.sites(function(sites){
-  sites.map(function(site){
-    console.log(site)
-  })
+  var promises = sites.map(nominate)
+
 })
-*/
