@@ -36,34 +36,35 @@ var socrata = (function(){
   socrata.login = function(domain, callback) {
     var page = webpage.create()
     page.open('https://' + domain + '/login', function (status) {
-      var x = page.evaluate(function(email, password){
+      domain = page.evaluate(function(email, password){
         document.querySelector('#user_session_login').value = email
         document.querySelector('#user_session_password').value = password
         document.querySelector('input[value="Sign In"]').click()
+        return window.location.hostname
       }, email, password)
       socrata.wait(3, function(){
-        page.render('login.png')
+        page.render(domain + '-login.png')
         var user_name = page.evaluate(function(){
           return document.querySelector('.currentUser').innerText
         })
         if (user_name === 'Unknown User') {
-          console.log('Logging in failed.')
-          phantom.exit()
+          console.log('Logging in to ' + domain + ' failed.')
         } else if (callback) {
           callback(page)
         } else {
-          phantom.exit()
+          console.log('No callback specified for ' + domain)
         }
       })
     })
   }
 
   socrata.nominate = function(page, title, description, attachment, callback) {
-    page.evaluate(function () {
+    var domain = page.evaluate(function () {
       window.location.href = '/nominate'
+      return window.location.hostname
     })
     socrata.wait(3, function(){
-      page.render('nominate.png')
+      page.render(domain + '-nominate.png')
 
       /*
       if (attachment) {
@@ -84,7 +85,7 @@ var socrata = (function(){
       }, title, description)
 
       socrata.wait(2, function(){
-        page.render('submit.png')
+        page.render(domain + '-submit.png')
         callback()
       })
     })
@@ -93,10 +94,30 @@ var socrata = (function(){
   return socrata
 })()
 
-// Only one site at a time
 var system = require('system')
-socrata.login(system.args[1], function(page){
-  socrata.nominate(page, system.args[2], system.args[3], system.args[4], function(){
-    phantom.exit()
-  })
+
+socrata.sites(function(todo){
+  var working = false
+  var current = null
+  var so_far = 0
+  var total = todo.length
+  while (true) {
+    if (!working) {
+      if (current === null) {
+        current = todo.pop()
+        so_far++
+        console.log(current, '(', so_far, 'of', total, ')')
+      } else {
+        working = true
+        socrata.login(current, function(page){
+          socrata.nominate(page, system.args[1], system.args[2], system.args[3], function(){
+            working = false
+            current = null
+          })
+        })
+      }
+    } else if (todo.length === 0) {
+      phantom.exit()
+    }
+  }
 })
