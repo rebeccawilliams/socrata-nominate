@@ -93,22 +93,10 @@ var socrata = (function(){
   return socrata
 })()
 
+// Only one site at a time
 var system = require('system')
-
-var nominate = function(domain) {
-  return {
-    then:function(callback){
-      socrata.login(domain, function(page){
-        socrata.nominate(page, system.args[1], system.args[2], system.args[3], callback)
-      })
-    }
-  }
-}
-
-
-socrata.sites(function(sites){
-  var promises = [null].concat(sites.map(nominate)).concat({then:phantom.exit})
-  promises.reduce(function(_,promise){
-    console.log(promise.then)
+socrata.login(system.args[1], function(page){
+  socrata.nominate(page, system.args[2], system.args[3], system.args[4], function(){
+    phantom.exit()
   })
 })
