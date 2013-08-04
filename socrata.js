@@ -9,17 +9,17 @@ var socrata = (function(){
   socrata.sites = function() {
     var page = webpage.create()
     page.open('http://status.socrata.com/sites', function(status) {
-      var portals = JSON.parse(page.plainText)
-      portals.map(function(portal){
+      var portals = JSON.parse(page.plainText).map(function(portal){
         if (socrata.is_domain(portal.description)) {
           var domain = portal.description
         } else if (socrata.is_domain(portal.name)) {
           var domain = portal.name
         } else {
-          var domain = null
+          var domain = ''
         }
         return domain.replace('https://', '').replace('http://', '')
-      })
+      }).filter(function(domain) { return domain !== '' })
+      console.log(portals)
     })
   }
 
