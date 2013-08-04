@@ -6,7 +6,7 @@ var socrata = (function(){
     return (null !== potential_url.match(/\./)) && (null == potential_url.match(/ /))
   }
 
-  socrata.sites = function() {
+  socrata.sites = function(callback) {
     var page = webpage.create()
     page.open('http://status.socrata.com/sites', function(status) {
       var portals = JSON.parse(page.plainText).map(function(portal){
@@ -19,7 +19,7 @@ var socrata = (function(){
         }
         return domain.replace('https://', '').replace('http://', '')
       }).filter(function(domain) { return domain !== '' })
-      console.log(portals)
+      callback(portals)
     })
   }
 
@@ -29,7 +29,10 @@ var socrata = (function(){
       phantom.exit()
     })
   }
+
   return socrata
 })()
 
-socrata.sites()
+socrata.sites(function(site){
+  console.log(site)
+})
