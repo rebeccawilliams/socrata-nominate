@@ -6,6 +6,10 @@ var socrata = (function(){
   var email = system.env.SOCRATA_EMAIL
   var password = system.env.SOCRATA_PASSWORD
 
+  if (typeof('email') === 'undefined' || typeof('password') === 'undefined'){
+    console.log('Warning: SOCRATA_EMAIL or SOCRATA_PASSWORD might not be set.')
+  }
+
   socrata.wait = function(sec, func) { setTimeout(func, sec * 1000) }
 
   socrata.is_domain = function(potential_url){
