@@ -96,7 +96,7 @@ var socrata = (function(){
 
 var system = require('system')
 socrata.login('data.nola.gov', function(page){
-  socrata.nominate(page, system.args[1], system.args[2])
+  socrata.nominate(page, system.args[1], system.args[2], system.args[3])
 })
 
 /*
