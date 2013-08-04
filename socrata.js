@@ -60,9 +60,10 @@ var socrata = (function(){
       page.render('nominate.png')
 
       page.evaluate(function(){
-        $('a[href="#Submit dataset"]').click()
+        $('#nominateTitle').val(title)
+        $('#nominateDescription').val(description)
         setTimeout(function(){
-          $('a[href="#Submit"]').click()
+        //$('a[href="#Submit"]').click()
         }, 1000)
       })
 
