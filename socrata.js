@@ -58,7 +58,7 @@ var socrata = (function(){
     })
   }
 
-  socrata.nominate = function(page, title, description, attachment, callback) {
+  socrata.nominate = function(page, title, description, attachment) {
     var domain = page.evaluate(function () {
       window.location.href = '/nominate'
       return window.location.hostname
@@ -86,7 +86,6 @@ var socrata = (function(){
 
       socrata.wait(2, function(){
         page.render(domain + '-submit.png')
-        callback()
       })
     })
   }
@@ -96,28 +95,20 @@ var socrata = (function(){
 
 var system = require('system')
 
-socrata.sites(function(todo){
-  var working = false
-  var current = null
-  var so_far = 0
-  var total = todo.length
-  while (true) {
-    if (!working) {
-      if (current === null) {
-        current = todo.pop()
-        so_far++
-        console.log(current, '(', so_far, 'of', total, ')')
-      } else {
-        working = true
-        socrata.login(current, function(page){
-          socrata.nominate(page, system.args[1], system.args[2], system.args[3], function(){
-            working = false
-            current = null
-          })
-        })
-      }
-    } else if (todo.length === 0) {
-      phantom.exit()
-    }
+socrata.sites(function(sites){
+  var total = sites.length
+      so_far = 0
+
+  for (i in sites) {
+    socrata.wait(i * 10, function(){
+      so_far++
+      var site = sites.pop()
+
+      console.log(site, '(', so_far, 'of', total, ')')
+      socrata.login(site, function(page){
+        socrata.nominate(page, system.args[1], system.args[2], system.args[3])
+      })
+    })
+    socrata.wait(total * 10, phantom.exit)
   }
 })
