@@ -23,18 +23,24 @@ var socrata = (function(){
     })
   }
 
-  socrata.login = function(site) {
+  socrata.login = function(domain, callback) {
     var page = webpage.create()
-    page.open(url + '/login', function (status) {
-      document.getElementById('user_session_login').value = 'abc'
-      document.getElementById('user_session_password').value = 'abc'
-      $('input[value="Sign In"]').click()
-      console.log(window.location)
+    page.open('https://' + domain + '/login', function (status) {
+      var x = page.evaluate(function(){
+        document.querySelector('#user_session_login').value = 'abc'
+        document.querySelector('#user_session_password').value = 'abc'
+        document.querySelector('input[value="Sign In"]').click()
+        return document.querySelector('.currentUser').innerText
+      })
+      console.log(x)
+      if (callback) {
+        callback(page)
+      }
     })
   }
 
-  socrata.nominate = function(site, title, description) {
-    page.open(url + '/nominate', function (status) {
+  socrata.nominate = function(domain, title, description) {
+    page.open('https://' + domain + '/nominate', function (status) {
       $('a[href="#Submit dataset"]').click()
       phantom.exit()
     })
@@ -43,7 +49,7 @@ var socrata = (function(){
   return socrata
 })()
 
-socrata.login('https://data.nola.gov')
+socrata.login('data.nola.gov')
 
 /*
 socrata.sites(function(sites){
