@@ -58,12 +58,18 @@ var socrata = (function(){
     })
   }
 
-  socrata.nominate = function(page, title, description) {
+  socrata.nominate = function(page, title, description, attachment) {
     page.evaluate(function () {
       window.location.href = '/nominate'
     })
     socrata.wait(3, function(){
       page.render('nominate.png')
+
+      /*
+      if (attachment) {
+        page.uploadFile('
+      }
+      */
 
       page.evaluate(function(title, description){
         // jQuery works but querySelector doesn't?
@@ -72,6 +78,7 @@ var socrata = (function(){
         document.querySelector('#nominateTitle').value = title
         document.querySelector('#nominateDescription').value = description
         setTimeout(function(){
+        // Do the submission.
         // document.querySelector('a[href="#Submit"]').click()
         }, 1000)
       }, title, description)
@@ -87,11 +94,9 @@ var socrata = (function(){
   return socrata
 })()
 
+var system = require('system')
 socrata.login('data.nola.gov', function(page){
-  socrata.nominate(page,
-    'Top Ten Elevator Offenders',
-    'I would like dataset with the addresses of the ten buildings with the most offensive elevators.'
-  )
+  socrata.nominate(page, system.args[1], system.args[2])
 })
 
 /*
