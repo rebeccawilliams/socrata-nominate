@@ -52,17 +52,25 @@ var socrata = (function(){
     })
   }
 
-  socrata.nominate = function(domain, title, description) {
-    page.open('https://' + domain + '/nominate', function (status) {
-      $('a[href="#Submit dataset"]').click()
-      phantom.exit()
+  socrata.nominate = function(page, title, description) {
+    page.evaluate(function () {
+      window.location.href = '/nominate'
     })
+    setTimeout(function(){
+      page.render('nominate.png')
+
+      // $('a[href="#Submit dataset"]').click()
+      phantom.exit()
+
+    }, 3000)
   }
 
   return socrata
 })()
 
-socrata.login('data.nola.gov')
+socrata.login('data.nola.gov', function(page){
+  socrata.nominate(page, 'a', 'b')
+})
 
 /*
 socrata.sites(function(sites){
