@@ -1,6 +1,7 @@
+var webpage = require('webpage')
+var system = require('system')
+
 var socrata = (function(){
-  var webpage = require('webpage')
-  var system = require('system')
   var socrata = {}
 
   var email = system.env.SOCRATA_EMAIL
@@ -104,9 +105,7 @@ var socrata = (function(){
   return socrata
 })()
 
-var system = require('system')
-var INTERVAL = 15
-
+var INTERVAL = 20
 socrata.sites(function(sites){
   var total = sites.length
       so_far = 0
@@ -117,8 +116,15 @@ socrata.sites(function(sites){
       var site = sites.pop()
 
       console.log('\n' + site + ' (' + so_far + ' of ' + total + ')')
-      socrata.login(site, function(page){
-        socrata.nominate(page, system.args[1], system.args[2], system.args[3])
+      var page = webpage.create()
+      page.open('https://' + site + '/analytics', function(status) {
+        if (null === page.plainText.match('Site Analytics')) {
+          socrata.login(site, function(page){
+            socrata.nominate(page, system.args[1], system.args[2], system.args[3])
+          })
+        } else {
+          console.log(site + ' has already enabled the /analytics page.')
+        }
       })
     })
     socrata.wait(total * INTERVAL, phantom.exit)
