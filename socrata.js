@@ -105,7 +105,7 @@ var socrata = (function(){
   return socrata
 })()
 
-var INTERVAL = 20
+var INTERVAL = 30
 socrata.sites(function(sites){
   var total = sites.length
       so_far = 0
