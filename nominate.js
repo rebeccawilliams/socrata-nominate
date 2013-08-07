@@ -77,7 +77,7 @@ var socrata = (function(){
 
           setTimeout(function(){
           // Do the submission.
-          // document.querySelector('a[href="#Submit"]').click()
+          document.querySelector('a[href="#Submit"]').click()
           }, 1000)
           return true
         } else {
