@@ -128,6 +128,6 @@ socrata.sites(function(sites){
         }
       })
     })
-    socrata.wait(total * INTERVAL, phantom.exit)
   }
+  socrata.wait(total * INTERVAL, phantom.exit)
 })
