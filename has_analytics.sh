@@ -15,8 +15,14 @@ data.redmond.gov             data.seattle.gov             data.montgomerycountym
 '
 
 mkdir -p analytics
+echo portal,has_analytics
 for portal in $PORTALS; do
-  test -f "analytics/${portal}-$(date --rfc-3339 date).html" ||
-    curl "https://${portal}/analytics" > "analytics/${portal}-$(date --rfc-3339 date).html"
+  file="analytics/${portal}-$(date --rfc-3339 date).html"
+  test -f "${file}" || curl "https://${portal}/analytics" > "${file}"
+  if grep Site\ Analytics "${file}"; then
+    echo "${portal},TRUE"
+  else
+    echo "${portal},FALSE"
+  fi
   break
 done
