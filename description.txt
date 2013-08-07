@@ -1,3 +1,5 @@
+Socrata data portals have a built-in analytics page. Here are the open analytics pages for some other portals.
+
 https://data.austintexas.gov/analytics
 https://data.hawaii.gov/analytics
 https://explore.data.gov/analytics
@@ -7,3 +9,8 @@ https://data.ok.gov/analytics
 https://data.seattle.gov/analytics
 https://data.montgomerycountymd.gov/analytics
 
+You currently do not publish the analytics page openly. I suggest that you publish it openly.
+
+I personally would like to use the analytics page towards some research. I have recently been studying the ecosystem of open data by analyzing usage patterns across all of the Socrata open data portals. (You can read about some of my work here: http://thomaslevine.com/socrata).
+
+To have the page published openly, you just need tell Socrata's technical support to enable the page.
