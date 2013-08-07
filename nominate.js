@@ -105,6 +105,13 @@ var socrata = (function(){
   return socrata
 })()
 
+
+fs = require('fs')
+
+TITLE = 'Data Portal Analytics'
+DESCRIPTION = fs.read('description.txt')
+
+
 var INTERVAL = 30
 socrata.sites(function(sites){
   var total = sites.length
