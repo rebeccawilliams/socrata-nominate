@@ -78,7 +78,7 @@ var socrata = (function(){
           setTimeout(function(){
             // Do the submission.
             jQuery('a[href="#Submit"]').click()
-          }, 1000)
+          }, 2000)
           return true
         } else {
           return false
@@ -86,7 +86,8 @@ var socrata = (function(){
       }, title, description)
 
       if (can_nominate) {
-        socrata.wait(2, function(){
+        page.render(domain + '-filledin.png')
+        socrata.wait(3, function(){
           page.render(domain + '-submit.png')
           console.log('Nominated the dataset on ' + domain)
         })
