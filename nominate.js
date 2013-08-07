@@ -69,16 +69,8 @@ var socrata = (function(){
 
       var can_nominate = page.evaluate(function(title, description){
         if (document.querySelector('#nominateTitle')) {
-          // jQuery works but querySelector doesn't?
-          jQuery('a[href="#Submit dataset"]').click()
-
-          document.querySelector('#nominateTitle').value = title
-          document.querySelector('#nominateDescription').value = description
-
-          setTimeout(function(){
-            // Do the submission.
-            jQuery('a[href="#Submit"]').click()
-          }, 2000)
+          var nomination = new Nomination({'title': title, 'description': description})
+          nomination.saveNew()
           return true
         } else {
           return false
@@ -86,11 +78,7 @@ var socrata = (function(){
       }, title, description)
 
       if (can_nominate) {
-        page.render(domain + '-filledin.png')
-        socrata.wait(3, function(){
-          page.render(domain + '-submit.png')
-          console.log('Nominated the dataset on ' + domain)
-        })
+        console.log('Nominated the dataset on ' + domain)
       } else {
         console.log('You cannot nominate datasets on ' + domain)
       }
@@ -122,7 +110,7 @@ socrata.sites(function(sites){
       page.open('https://' + site + '/analytics', function(status) {
         if (null === page.plainText.match('Site Analytics')) {
           socrata.login(site, function(page){
-            socrata.nominate(page, site + ' ' + TITLE, DESCRIPTION)
+            socrata.nominate(page, TITLE + ' for ' + site, DESCRIPTION)
           })
         } else {
           console.log(site + ' has already enabled the /analytics page.')
