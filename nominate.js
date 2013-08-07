@@ -121,7 +121,7 @@ socrata.sites(function(sites){
       page.open('https://' + site + '/analytics', function(status) {
         if (null === page.plainText.match('Site Analytics')) {
           socrata.login(site, function(page){
-            socrata.nominate(page, TITLE, DESCRIPTION)
+            socrata.nominate(page, site + ' ' + TITLE, DESCRIPTION)
           })
         } else {
           console.log(site + ' has already enabled the /analytics page.')
