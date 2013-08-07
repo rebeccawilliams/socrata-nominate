@@ -59,19 +59,13 @@ var socrata = (function(){
     })
   }
 
-  socrata.nominate = function(page, title, description, attachment) {
+  socrata.nominate = function(page, title, description) {
     var domain = page.evaluate(function () {
       window.location.href = '/nominate'
       return window.location.hostname
     })
     socrata.wait(3, function(){
       page.render(domain + '-nominate.png')
-
-      /*
-      if (attachment) {
-        page.uploadFile('
-      }
-      */
 
       var can_nominate = page.evaluate(function(title, description){
         if (document.querySelector('#nominateTitle')) {
@@ -127,7 +121,7 @@ socrata.sites(function(sites){
       page.open('https://' + site + '/analytics', function(status) {
         if (null === page.plainText.match('Site Analytics')) {
           socrata.login(site, function(page){
-            socrata.nominate(page, system.args[1], system.args[2], system.args[3])
+            socrata.nominate(page, TITLE, DESCRIPTION)
           })
         } else {
           console.log(site + ' has already enabled the /analytics page.')

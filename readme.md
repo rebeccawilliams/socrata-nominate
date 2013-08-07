@@ -15,11 +15,13 @@ export SOCRATA_PASSWORD=hmkmovq223h89u,hr9on
 ```
 
 ### Run
-Request the a dataset from all of the sites without an analytics page.
+Request that the analytics page be opened.
 
 ```sh
-phantomjs socrata.js [title] [description] [attachment]
+phantomjs nominate.js
 ```
+
+This reads the description from `description.txt`.
 
 ### Limitations
 This tool doesn't support the attachment field.
