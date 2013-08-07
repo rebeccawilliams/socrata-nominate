@@ -9,8 +9,8 @@ https://data.ok.gov/analytics
 https://data.seattle.gov/analytics
 https://data.montgomerycountymd.gov/analytics
 
-You currently do not publish the analytics page openly. I suggest that you publish it openly.
+Your analytics page is not currently published openly, and I suggest that it be published openly.
 
-I personally would like to use the analytics page towards some research. I have recently been studying the ecosystem of open data by analyzing usage patterns across all of the Socrata open data portals. (You can read about some of my work here: http://thomaslevine.com/socrata).
+I personally would like to use the analytics page towards some research. I have recently been studying the ecosystem of open data by analyzing usage patterns across all of the Socrata open data portals; you can read about some of my work at http://thomaslevine.com/socrata . Open publishing of your analytics page would allow me to conduct longitudinal analyses to study the impacts of specific events (such as policy changes, hackathons/conferences, and press coverage) on the use of open data.
 
 To have the page published openly, you just need tell Socrata's technical support to enable the page.
