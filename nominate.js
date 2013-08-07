@@ -78,7 +78,9 @@ var socrata = (function(){
       }, title, description)
 
       if (can_nominate) {
-        console.log('Nominated the dataset on ' + domain)
+        socrata.wait(2, function(){
+          console.log('Nominated the dataset on ' + domain)
+        })
       } else {
         console.log('You cannot nominate datasets on ' + domain)
       }
