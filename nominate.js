@@ -76,8 +76,8 @@ var socrata = (function(){
           document.querySelector('#nominateDescription').value = description
 
           setTimeout(function(){
-          // Do the submission.
-          jQuery('a[href="#Submit"]').click()
+            // Do the submission.
+            jQuery('a[href="#Submit"]').click()
           }, 1000)
           return true
         } else {
