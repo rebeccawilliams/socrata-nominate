@@ -18,11 +18,15 @@ mkdir -p analytics
 echo portal,has_analytics
 for portal in $PORTALS; do
   file="analytics/${portal}-$(date --rfc-3339 date).html"
-  test -f "${file}" || curl "https://${portal}/analytics" > "${file}"
-  if grep Site\ Analytics "${file}"; then
+
+  if ! test -f "${file}"; then
+    curl "https://${portal}/analytics" > "${file}"
+    sleep 1s
+  fi
+
+  if grep Site\ Analytics "${file}" > /dev/null; then
     echo "${portal},TRUE"
   else
     echo "${portal},FALSE"
   fi
-  break
 done
